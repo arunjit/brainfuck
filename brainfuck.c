@@ -1,15 +1,15 @@
 #include <stdio.h>
 
 int main() {
-  char array[0xFFFF] = {0};
+  char array[256] = {0};
   char *ptr = array;
   char input;
   int skip;
-  // char *code = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---."
-  //              "+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
-  char *code = ">++++++++++++++++++++++++++++++++++++++++++++++++<++[>.<-]"
-               ">+++++++.>>++++++++++."; // prints "007"
+  char *code = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---."
+               "+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
   int i, loopIndex;
+  int loops[16];
+  for (i = 0; i < 16; i++) loops[i] = -1;
 
   skip = 0;
   loopIndex = -1;
@@ -25,13 +25,14 @@ int main() {
       case '.': putchar(*ptr); break;
       case ',': *ptr = getchar(); break;
       case '[':
-        if (*ptr) loopIndex = i;
-        else skip = 1;
+        if (*ptr) {
+          if (loops[loopIndex] != i) loops[++loopIndex] = i;
+        } else skip = 1;
         break;
       case ']':
         skip = 0;
-        if (*ptr) i = loopIndex - 1;
-        else loopIndex = -1;
+        if (*ptr) i = loops[loopIndex] - 1;
+        else loops[loopIndex--] = -1;
         break;
       default: break;
     }
