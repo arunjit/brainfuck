@@ -1,2 +1,2 @@
 .tup
-brainfuck
+!build/tup.config
